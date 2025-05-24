@@ -24,24 +24,20 @@ func New[T any]() *LinkedList[T] {
 }
 
 // Add a node to the end of the list
-func (l *LinkedList[T]) Append(value T) {
+func (l *LinkedList[T]) Append(value T) *LinkedList[T] {
 	new := &Node[T]{value: value}
 	l.length++
 
 	if l.head == nil {
 		l.head = new
 		l.tail = new
-		return
+		return l
 	}
 
-	current := l.head
-
-	for current.next != nil {
-		current = current.next
-	}
-
-	current.next = new
+	l.tail.next = new
 	l.tail = new
+
+	return l
 }
 
 // Get the first node in the list
@@ -52,6 +48,22 @@ func (l *LinkedList[T]) Head() *Node[T] {
 // The length of the list
 func (l *LinkedList[T]) Length() int {
 	return l.length
+}
+
+func (l *LinkedList[T]) Prepend(value T) *LinkedList[T] {
+	new := &Node[T]{value: value}
+	l.length++
+
+	if l.head == nil {
+		l.head = new
+		l.tail = new
+		return l
+	}
+
+	new.next = l.head
+	l.head = new
+
+	return l
 }
 
 // Get the last node in the list

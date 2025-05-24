@@ -45,3 +45,34 @@ func TestAppend(t *testing.T) {
 		}
 	})
 }
+
+func TestPrepend(t *testing.T) {
+	t.Run("it prepends a value to the list", func(t *testing.T) {
+		l := linkedlist.New[int]()
+		l.Append(1)
+		l.Append(2)
+		l.Prepend(23)
+
+		if l.Length() != 3 {
+			t.Error("expected a list of 3 items")
+		}
+	})
+	t.Run("it has the elements in correct order", func(t *testing.T) {
+		l := linkedlist.New[int]()
+		l.Append(1)
+		l.Append(2)
+		l.Append(3)
+		l.Prepend(50)
+
+		got := l.Values()
+		want := []int{50, 1, 2, 3}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("expected %v, got %v", want, got)
+		}
+
+		if l.Head().Value() != 50 || l.Tail().Value() != 3 {
+			t.Errorf("error asserting head and tail values")
+		}
+	})
+}
