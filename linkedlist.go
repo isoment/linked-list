@@ -40,16 +40,46 @@ func (l *LinkedList[T]) Append(value T) *LinkedList[T] {
 	return l
 }
 
+// Get the Node at the given 0 based index
+func (l *LinkedList[T]) GetByIndex(index int) (*Node[T], error) {
+	if index < 0 {
+		return nil, ErrorInvalidIndex
+	}
+
+	if l.length == 0 {
+		return nil, ErrorEmptyList
+	}
+
+	count := 0
+	current := l.head
+
+	for current != nil {
+		if count == index {
+			return current, nil
+		} else {
+			count++
+			current = current.next
+		}
+	}
+
+	return nil, ErrorInvalidIndex
+}
+
 // Get the first node in the list
 func (l *LinkedList[T]) Head() *Node[T] {
 	return l.head
 }
+
+// func (l *LinkedList[T]) Insert(index int, value T) *LinkedList[T] {
+
+// }
 
 // The length of the list
 func (l *LinkedList[T]) Length() int {
 	return l.length
 }
 
+// Add a node to the beginning of the list
 func (l *LinkedList[T]) Prepend(value T) *LinkedList[T] {
 	new := &Node[T]{value: value}
 	l.length++
@@ -71,6 +101,7 @@ func (l *LinkedList[T]) Tail() *Node[T] {
 	return l.tail
 }
 
+// Get the values from the list as a slice
 func (l *LinkedList[T]) Values() []T {
 	var values []T
 

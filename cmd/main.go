@@ -11,5 +11,6 @@ func main() {
 	list.Append(1)
 	list.Append(2)
 	list.Append(3)
-	fmt.Println(list.Values())
+	v, _ := list.GetByIndex(3)
+	fmt.Println(v)
 }
