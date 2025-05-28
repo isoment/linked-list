@@ -70,9 +70,43 @@ func (l *LinkedList[T]) Head() *Node[T] {
 	return l.head
 }
 
-// func (l *LinkedList[T]) Insert(index int, value T) *LinkedList[T] {
+// Insert a value at the given 0 based index in the list
+func (l *LinkedList[T]) Insert(index int, value T) (*LinkedList[T], error) {
+	if index < 0 {
+		return nil, ErrorInvalidIndex
+	}
 
-// }
+	// If the list is empty or the index is outside the list size append
+	if l.length == 0 || index >= l.length {
+		l.Append(value)
+		return l, nil
+	}
+
+	// Handle the case where we are inserting at the beginning
+	if index == 0 {
+		l.Prepend(value)
+		return l, nil
+	}
+
+	count := 0
+	current := l.head
+
+	for current != nil {
+		if count+1 == index {
+			new := &Node[T]{value: value}
+
+			next := current.next
+			current.next = new
+			new.next = next
+			break
+		} else {
+			count++
+			current = current.next
+		}
+	}
+
+	return l, nil
+}
 
 // The length of the list
 func (l *LinkedList[T]) Length() int {

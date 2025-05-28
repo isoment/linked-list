@@ -119,6 +119,82 @@ func TestGet(t *testing.T) {
 	})
 }
 
+func TestInsert(t *testing.T) {
+	t.Run("it returns an error if the index is less than 0", func(t *testing.T) {
+		l := linkedlist.New[int]().
+			Append(1).
+			Append(2)
+
+		_, err := l.Insert(-1, 99)
+		if err == nil {
+			t.Error("expected error got none")
+		}
+	})
+
+	t.Run("it inserts to an empty list", func(t *testing.T) {
+		l := linkedlist.New[int]()
+
+		v, _ := l.Insert(0, 1)
+		if v.Length() != 1 {
+			t.Error("expected element to be added, list is empty")
+		}
+	})
+
+	t.Run("value is inserted in the correct position", func(t *testing.T) {
+		testCases := []struct {
+			name  string
+			index int
+			value int
+		}{
+			{
+				name:  "index 0",
+				index: 0,
+				value: 99,
+			},
+			{
+				name:  "index 1",
+				index: 1,
+				value: 99,
+			},
+			{
+				name:  "index 2",
+				index: 2,
+				value: 99,
+			},
+			{
+				name:  "index 3",
+				index: 3,
+				value: 99,
+			},
+		}
+
+		for _, tc := range testCases {
+			l := linkedlist.New[int]().
+				Append(1).
+				Append(2).
+				Append(3).
+				Append(4)
+
+			t.Run(tc.name, func(t *testing.T) {
+				v, _ := l.GetByIndex(tc.index)
+				if v.Value() == tc.value {
+					t.Error("got unexpected insert value")
+				}
+
+				_, err := l.Insert(tc.index, tc.value)
+				if err != nil {
+					t.Error("got unexpected error")
+				}
+
+				w, _ := l.GetByIndex(tc.index)
+				if w.Value() != tc.value {
+					t.Errorf("expected %v, got %v", tc.value, w.Value())
+				}
+			})
+		}
+	})
+}
+
 func TestPrepend(t *testing.T) {
 	t.Run("it prepends a value to the list", func(t *testing.T) {
 		l := linkedlist.New[int]()

@@ -11,6 +11,13 @@ func main() {
 	list.Append(1)
 	list.Append(2)
 	list.Append(3)
-	v, _ := list.GetByIndex(3)
-	fmt.Println(v)
+	list.Append(4)
+	list.Append(5)
+
+	_, err := list.Insert(6, 99)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(list.Values())
+	}
 }
