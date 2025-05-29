@@ -1,6 +1,6 @@
 package linkedlist
 
-type Node[T any] struct {
+type Node[T comparable] struct {
 	value T
 	next  *Node[T]
 }
@@ -13,13 +13,27 @@ func (n *Node[T]) Value() T {
 	return n.value
 }
 
-type LinkedList[T any] struct {
+type LinkedList[T comparable] struct {
 	length int
 	head   *Node[T]
 	tail   *Node[T]
 }
 
-func New[T any]() *LinkedList[T] {
+func NewFromSlice[T comparable](input []T) *LinkedList[T] {
+	new := New[T]()
+
+	if len(input) == 0 {
+		return new
+	}
+
+	for _, v := range input {
+		new.Append(v)
+	}
+
+	return new
+}
+
+func New[T comparable]() *LinkedList[T] {
 	return &LinkedList[T]{}
 }
 

@@ -16,6 +16,64 @@ func TestNew(t *testing.T) {
 	})
 }
 
+func TestNewFromSlice(t *testing.T) {
+	t.Run("it creates a new list from a slice with the correct length, head and tail values", func(t *testing.T) {
+		l := linkedlist.NewFromSlice([]int{1, 2, 3, 4})
+
+		if l.Length() != 4 {
+			t.Errorf("expected length 4 but got %v", l.Length())
+		}
+
+		if l.Head().Value() != 1 {
+			t.Errorf("expected 1 to be the head but got %v", l.Head().Value())
+		}
+
+		if l.Tail().Value() != 4 {
+			t.Errorf("expected 4 to be the head but got %v", l.Tail().Value())
+		}
+	})
+
+	t.Run("it orders the elements correctly", func(t *testing.T) {
+		l := linkedlist.NewFromSlice([]int{11, 22, 33, 44})
+
+		testCases := []struct {
+			name  string
+			index int
+			value int
+		}{
+			{
+				name:  "first element",
+				index: 0,
+				value: 11,
+			},
+			{
+				name:  "second element",
+				index: 1,
+				value: 22,
+			},
+			{
+				name:  "third element",
+				index: 2,
+				value: 33,
+			},
+			{
+				name:  "fourth element",
+				index: 3,
+				value: 44,
+			},
+		}
+
+		for _, tc := range testCases {
+			t.Run(tc.name, func(t *testing.T) {
+				v, _ := l.GetByIndex(tc.index)
+				if v.Value() != tc.value {
+					t.Errorf("expected %v, got %v", tc.value, v.Value())
+				}
+			})
+		}
+	})
+}
+
 func TestAppend(t *testing.T) {
 	t.Run("it appends a new value to the list", func(t *testing.T) {
 		l := linkedlist.New[int]()
