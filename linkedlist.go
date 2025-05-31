@@ -19,6 +19,11 @@ type LinkedList[T comparable] struct {
 	tail   *Node[T]
 }
 
+type NodeWithPosition[T comparable] struct {
+	Node     *Node[T]
+	Position int
+}
+
 func NewFromSlice[T comparable](input []T) *LinkedList[T] {
 	new := New[T]()
 
@@ -156,6 +161,26 @@ func (l *LinkedList[T]) Prepend(value T) *LinkedList[T] {
 	l.head = new
 
 	return l
+}
+
+// Find the first occurrence of a value in the list and its 0 based index
+func (l *LinkedList[T]) FindFirst(value T) (result *NodeWithPosition[T], ok bool) {
+	count := 0
+	current := l.head
+
+	for current != nil {
+		if current.value == value {
+			return &NodeWithPosition[T]{
+				Node:     current,
+				Position: count,
+			}, true
+		} else {
+			count++
+			current = current.next
+		}
+	}
+
+	return nil, false
 }
 
 // Get the last node in the list

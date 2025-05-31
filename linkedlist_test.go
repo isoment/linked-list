@@ -139,6 +139,62 @@ func TestExists(t *testing.T) {
 	}
 }
 
+func TestFindFirst(t *testing.T) {
+	testCases := []struct {
+		name             string
+		list             *linkedlist.LinkedList[string]
+		input            string
+		ok               bool
+		expectedPosition int
+	}{
+		{
+			name:  "empty list",
+			list:  linkedlist.New[string](),
+			input: "a",
+			ok:    false,
+		},
+		{
+			name:             "found",
+			list:             linkedlist.NewFromSlice([]string{"a", "b", "c", "d"}),
+			input:            "c",
+			ok:               true,
+			expectedPosition: 2,
+		},
+		{
+			name:             "finds first",
+			list:             linkedlist.NewFromSlice([]string{"a", "b", "c", "d", "d"}),
+			input:            "d",
+			ok:               true,
+			expectedPosition: 3,
+		},
+		{
+			name:  "does not exist",
+			list:  linkedlist.NewFromSlice([]string{"a", "b", "c", "d"}),
+			input: "f",
+			ok:    false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			v, ok := tc.list.FindFirst(tc.input)
+
+			if tc.ok {
+				if v == nil {
+					t.Error("expected a NodeWithPosition value but got none")
+				}
+				if v.Position != tc.expectedPosition {
+					t.Errorf("expected node to be at position: %v but it is at: %v", tc.expectedPosition, v.Position)
+				}
+			} else {
+				if ok {
+					t.Error("expected ok to be false but it is true")
+				}
+			}
+		})
+	}
+}
+
 func TestGet(t *testing.T) {
 	t.Run("it returns an error if the list is empty", func(t *testing.T) {
 		l := linkedlist.New[int]()
