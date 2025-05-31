@@ -54,6 +54,20 @@ func (l *LinkedList[T]) Append(value T) *LinkedList[T] {
 	return l
 }
 
+// Check if a node with the given value exists in the list
+func (l *LinkedList[T]) Exists(value T) bool {
+	current := l.head
+
+	for current != nil {
+		if current.value == value {
+			return true
+		}
+		current = current.next
+	}
+
+	return false
+}
+
 // Get the Node at the given 0 based index
 func (l *LinkedList[T]) GetByIndex(index int) (*Node[T], error) {
 	if index < 0 {

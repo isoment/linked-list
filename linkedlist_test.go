@@ -104,6 +104,41 @@ func TestAppend(t *testing.T) {
 	})
 }
 
+func TestExists(t *testing.T) {
+	l := linkedlist.NewFromSlice([]string{"a", "b", "c", "d", "d"})
+
+	testCases := []struct {
+		name  string
+		input string
+		want  bool
+	}{
+		{
+			name:  "exists",
+			input: "b",
+			want:  true,
+		},
+		{
+			name:  "multiple",
+			input: "d",
+			want:  true,
+		},
+		{
+			name:  "not exists",
+			input: "z",
+			want:  false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := l.Exists(tc.input)
+			if got != tc.want {
+				t.Errorf("got %v, want %v", got, tc.want)
+			}
+		})
+	}
+}
+
 func TestGet(t *testing.T) {
 	t.Run("it returns an error if the list is empty", func(t *testing.T) {
 		l := linkedlist.New[int]()
