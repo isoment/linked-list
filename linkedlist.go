@@ -83,14 +83,14 @@ func (l *LinkedList[T]) GetByIndex(index int) (*Node[T], error) {
 		return nil, ErrorEmptyList
 	}
 
-	count := 0
+	i := 0
 	current := l.head
 
 	for current != nil {
-		if count == index {
+		if i == index {
 			return current, nil
 		} else {
-			count++
+			i++
 			current = current.next
 		}
 	}
@@ -121,11 +121,11 @@ func (l *LinkedList[T]) Insert(index int, value T) (*LinkedList[T], error) {
 		return l, nil
 	}
 
-	count := 0
+	i := 0
 	current := l.head
 
 	for current != nil {
-		if count+1 == index {
+		if i+1 == index {
 			new := &Node[T]{value: value}
 
 			next := current.next
@@ -133,7 +133,7 @@ func (l *LinkedList[T]) Insert(index int, value T) (*LinkedList[T], error) {
 			new.next = next
 			break
 		} else {
-			count++
+			i++
 			current = current.next
 		}
 	}
@@ -163,19 +163,45 @@ func (l *LinkedList[T]) Prepend(value T) *LinkedList[T] {
 	return l
 }
 
+// Find all occurrences of a value in the list
+func (l *LinkedList[T]) FindAll(value T) ([]NodeWithPosition[T], bool) {
+	var result []NodeWithPosition[T]
+
+	i := 0
+	current := l.head
+
+	for current != nil {
+		if current.value == value {
+			n := NodeWithPosition[T]{
+				Node:     current,
+				Position: i,
+			}
+			result = append(result, n)
+		}
+		i++
+		current = current.next
+	}
+
+	if len(result) > 0 {
+		return result, true
+	} else {
+		return nil, false
+	}
+}
+
 // Find the first occurrence of a value in the list and its 0 based index
 func (l *LinkedList[T]) FindFirst(value T) (result *NodeWithPosition[T], ok bool) {
-	count := 0
+	i := 0
 	current := l.head
 
 	for current != nil {
 		if current.value == value {
 			return &NodeWithPosition[T]{
 				Node:     current,
-				Position: count,
+				Position: i,
 			}, true
 		} else {
-			count++
+			i++
 			current = current.next
 		}
 	}

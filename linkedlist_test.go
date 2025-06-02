@@ -139,6 +139,72 @@ func TestExists(t *testing.T) {
 	}
 }
 
+func TestFindAll(t *testing.T) {
+	testCases := []struct {
+		name        string
+		list        *linkedlist.LinkedList[int]
+		input       int
+		ok          bool
+		resultCount int
+		positions   []int
+	}{
+		{
+			name:  "empty list",
+			list:  linkedlist.New[int](),
+			input: 2,
+			ok:    false,
+		},
+		{
+			name:        "one occurrence",
+			list:        linkedlist.NewFromSlice([]int{1, 2, 3, 4}),
+			input:       3,
+			ok:          true,
+			resultCount: 1,
+			positions:   []int{2},
+		},
+		{
+			name:        "multiple occurrence",
+			list:        linkedlist.NewFromSlice([]int{1, 2, 3, 4, 3, 3}),
+			input:       3,
+			ok:          true,
+			resultCount: 3,
+			positions:   []int{2, 4, 5},
+		},
+		{
+			name:  "no occurrence",
+			list:  linkedlist.NewFromSlice([]int{1, 2, 3, 4}),
+			input: 99,
+			ok:    false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			v, ok := tc.list.FindAll(tc.input)
+
+			if tc.ok {
+				if v == nil {
+					t.Error("expected a return value but got none")
+				}
+				if len(v) != tc.resultCount {
+					t.Errorf("expected result count: %v, got: %v", tc.resultCount, len(v))
+				}
+
+				for _, j := range tc.positions {
+					_, err := tc.list.GetByIndex(j)
+					if err != nil {
+						t.Errorf("expected postion %v in result set, got none", j)
+					}
+				}
+			} else {
+				if ok {
+					t.Error("expected ok return to be false but it is true")
+				}
+			}
+		})
+	}
+}
+
 func TestFindFirst(t *testing.T) {
 	testCases := []struct {
 		name             string
