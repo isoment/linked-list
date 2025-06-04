@@ -104,6 +104,59 @@ func TestAppend(t *testing.T) {
 	})
 }
 
+func TestDelete(t *testing.T) {
+	testCases := []struct {
+		name     string
+		list     *linkedlist.LinkedList[int]
+		input    int
+		expected *linkedlist.LinkedList[int]
+	}{
+		{
+			name:     "empty list",
+			list:     linkedlist.New[int](),
+			input:    2,
+			expected: linkedlist.New[int](),
+		},
+		{
+			name:     "delete head",
+			list:     linkedlist.NewFromSlice([]int{1, 2, 3, 4}),
+			input:    1,
+			expected: linkedlist.NewFromSlice([]int{2, 3, 4}),
+		},
+		{
+			name:     "delete tail",
+			list:     linkedlist.NewFromSlice([]int{1, 2, 3, 4}),
+			input:    4,
+			expected: linkedlist.NewFromSlice([]int{1, 2, 3}),
+		},
+		{
+			name:     "delete inner",
+			list:     linkedlist.NewFromSlice([]int{1, 2, 3, 4}),
+			input:    2,
+			expected: linkedlist.NewFromSlice([]int{1, 3, 4}),
+		},
+		{
+			name:     "delete multiple",
+			list:     linkedlist.NewFromSlice([]int{1, 2, 1, 4, 1, 6, 8}),
+			input:    1,
+			expected: linkedlist.NewFromSlice([]int{2, 4, 6, 8}),
+		},
+		{
+			name:     "delete all",
+			list:     linkedlist.NewFromSlice([]int{1, 1, 1, 1}),
+			input:    1,
+			expected: linkedlist.New[int](),
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			v := tc.list.Delete(tc.input)
+			assertListsEqual(t, tc.expected, v)
+		})
+	}
+}
+
 func TestExists(t *testing.T) {
 	l := linkedlist.NewFromSlice([]string{"a", "b", "c", "d", "d"})
 
@@ -439,4 +492,26 @@ func TestPrepend(t *testing.T) {
 			t.Errorf("error asserting head and tail values")
 		}
 	})
+}
+
+func assertListsEqual[T comparable](t *testing.T, a, b *linkedlist.LinkedList[T]) {
+	t.Helper()
+
+	if a.Length() != b.Length() {
+		t.Error("lists do not have the same number of nodes")
+	}
+
+	if !reflect.DeepEqual(a.Values(), b.Values()) {
+		t.Errorf("%v does not match %v", a.Values(), b.Values())
+	}
+
+	if a.Length() != 0 && b.Length() != 0 {
+		if a.Head().Value() != b.Head().Value() {
+			t.Error("head value mismatch")
+		}
+
+		if a.Tail().Value() != b.Tail().Value() {
+			t.Error("tail value mismatch")
+		}
+	}
 }

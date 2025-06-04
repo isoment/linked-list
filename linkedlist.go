@@ -59,6 +59,42 @@ func (l *LinkedList[T]) Append(value T) *LinkedList[T] {
 	return l
 }
 
+// Delete all occurrences of a value in the list
+func (l *LinkedList[T]) Delete(value T) *LinkedList[T] {
+	if l.length == 0 {
+		return l
+	}
+
+	current := l.head
+	var prev *Node[T] = nil
+
+	for current != nil {
+		if current.value == value {
+			l.length--
+			// Need to handle the cases when we delete a head node, a tail node, or a middle node
+			if current == l.head {
+				l.head = current.next
+				if current == l.tail {
+					l.tail = nil
+				}
+				current = l.head
+			} else if current == l.tail {
+				l.tail = prev
+				prev.next = nil
+				current = nil
+			} else {
+				prev.next = current.next
+				current = current.next
+			}
+		} else {
+			prev = current
+			current = current.next
+		}
+	}
+
+	return l
+}
+
 // Check if a node with the given value exists in the list
 func (l *LinkedList[T]) Exists(value T) bool {
 	current := l.head
