@@ -95,6 +95,44 @@ func (l *LinkedList[T]) Delete(value T) *LinkedList[T] {
 	return l
 }
 
+// Remove the element at a given 0 based index, returns true if deleted.
+func (l *LinkedList[T]) DeleteIndex(index int) (ok bool) {
+	if index < 0 || index > l.length-1 {
+		return false
+	}
+
+	count := 0
+	current := l.head
+	var prev *Node[T] = nil
+
+	for current != nil {
+		if count == index {
+			l.length--
+			if current == l.head {
+				l.head = current.next
+				if current == l.tail {
+					l.tail = nil
+				}
+				current = l.head
+			} else if current == l.tail {
+				l.tail = prev
+				prev.next = nil
+				current = nil
+			} else {
+				prev.next = current.next
+				current = current.next
+			}
+			return true
+		} else {
+			count++
+			prev = current
+			current = current.next
+		}
+	}
+
+	return false
+}
+
 // Check if a node with the given value exists in the list
 func (l *LinkedList[T]) Exists(value T) bool {
 	current := l.head

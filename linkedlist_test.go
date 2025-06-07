@@ -157,6 +157,69 @@ func TestDelete(t *testing.T) {
 	}
 }
 
+func TestDeleteIndex(t *testing.T) {
+	testCases := []struct {
+		name           string
+		list           *linkedlist.LinkedList[int]
+		input          int
+		expectedReturn bool
+		expectedList   *linkedlist.LinkedList[int]
+	}{
+		{
+			name:           "empty list",
+			list:           linkedlist.New[int](),
+			input:          2,
+			expectedReturn: false,
+			expectedList:   linkedlist.New[int](),
+		},
+		{
+			name:           "invalid index",
+			list:           linkedlist.NewFromSlice([]int{1, 2, 3, 4}),
+			input:          25,
+			expectedReturn: false,
+			expectedList:   linkedlist.NewFromSlice([]int{1, 2, 3, 4}),
+		},
+		{
+			name:           "delete head",
+			list:           linkedlist.NewFromSlice([]int{1, 2, 3, 4}),
+			input:          0,
+			expectedReturn: true,
+			expectedList:   linkedlist.NewFromSlice([]int{2, 3, 4}),
+		},
+		{
+			name:           "delete tail",
+			list:           linkedlist.NewFromSlice([]int{1, 2, 3, 4}),
+			input:          3,
+			expectedReturn: true,
+			expectedList:   linkedlist.NewFromSlice([]int{1, 2, 3}),
+		},
+		{
+			name:           "delete inner",
+			list:           linkedlist.NewFromSlice([]int{1, 2, 3, 4}),
+			input:          2,
+			expectedReturn: true,
+			expectedList:   linkedlist.NewFromSlice([]int{1, 2, 4}),
+		},
+		{
+			name:           "delete only node",
+			list:           linkedlist.NewFromSlice([]int{5}),
+			input:          0,
+			expectedReturn: true,
+			expectedList:   linkedlist.New[int](),
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			v := tc.list.DeleteIndex(tc.input)
+			if tc.expectedReturn != v {
+				t.Errorf("expected %v but got %v", tc.expectedReturn, v)
+			}
+			assertListsEqual(t, tc.expectedList, tc.list)
+		})
+	}
+}
+
 func TestExists(t *testing.T) {
 	l := linkedlist.NewFromSlice([]string{"a", "b", "c", "d", "d"})
 
