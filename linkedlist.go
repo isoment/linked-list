@@ -220,6 +220,23 @@ func (l *LinkedList[T]) Length() int {
 	return l.length
 }
 
+// Return the middle element of the list
+func (l *LinkedList[T]) Middle() (*Node[T], error) {
+	if l.length == 0 {
+		return nil, ErrorEmptyList
+	}
+
+	left := l.head
+	right := l.head
+
+	for right != nil && right.next != nil {
+		left = left.next
+		right = right.next.next
+	}
+
+	return left, nil
+}
+
 // Add a node to the beginning of the list
 func (l *LinkedList[T]) Prepend(value T) *LinkedList[T] {
 	new := &Node[T]{value: value}

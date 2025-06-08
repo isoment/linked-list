@@ -526,6 +526,55 @@ func TestInsert(t *testing.T) {
 	})
 }
 
+func TestMiddle(t *testing.T) {
+	testCases := []struct {
+		name          string
+		list          *linkedlist.LinkedList[int]
+		expectError   bool
+		expectedValue int
+	}{
+		{
+			name:        "empty list",
+			list:        linkedlist.New[int](),
+			expectError: true,
+		},
+		{
+			name:          "single node",
+			list:          linkedlist.NewFromSlice([]int{1}),
+			expectError:   false,
+			expectedValue: 1,
+		},
+		{
+			name:          "odd number nodes",
+			list:          linkedlist.NewFromSlice([]int{1, 2, 3, 4, 5}),
+			expectError:   false,
+			expectedValue: 3,
+		},
+		{
+			name:          "even number nodes",
+			list:          linkedlist.NewFromSlice([]int{1, 2, 3, 4, 5, 6}),
+			expectError:   false,
+			expectedValue: 4,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			r, err := tc.list.Middle()
+
+			if tc.expectError && err == nil {
+				t.Fatal("expected error but got none")
+			}
+
+			if err == nil && !tc.expectError {
+				if r.Value() != tc.expectedValue {
+					t.Errorf("expected %v got %v", tc.expectedValue, r.Value())
+				}
+			}
+		})
+	}
+}
+
 func TestPrepend(t *testing.T) {
 	t.Run("it prepends a value to the list", func(t *testing.T) {
 		l := linkedlist.New[int]()
